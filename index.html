@@ -8,453 +8,97 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Turni RAI">
 <title>Turni RAI Palermo</title>
-
-<!-- PDF.js da CDN affidabile -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Unbounded:wght@400;700;900&display=swap');
 
 :root {
-  --bg:       #f5f2eb;
-  --surface:  #ffffff;
-  --ink:      #1a1410;
-  --ink2:     #6b6055;
-  --accent:   #c8401a;
-  --accent2:  #e85d20;
-  --ok:       #2a7a4b;
-  --ok-bg:    #e8f5ee;
-  --err:      #b91c1c;
-  --err-bg:   #fee2e2;
-  --border:   #ddd8cf;
-  --mono:     'DM Mono', monospace;
-  --display:  'Unbounded', sans-serif;
+–bg:      #f5f2eb;
+–surface: #ffffff;
+–ink:     #1a1410;
+–ink2:    #6b6055;
+–accent:  #c8401a;
+–ok:      #2a7a4b;
+–ok-bg:   #e8f5ee;
+–err:     #b91c1c;
+–err-bg:  #fee2e2;
+–border:  #ddd8cf;
+–mono:    ‘DM Mono’, monospace;
+–display: ‘Unbounded’, sans-serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-html { background: var(--bg); }
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { background: var(–bg); }
 
 body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--display);
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 32px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+background: var(–bg); color: var(–ink); font-family: var(–display);
+min-height: 100vh;
+padding: env(safe-area-inset-top,16px) 16px env(safe-area-inset-bottom,32px);
+display: flex; flex-direction: column; align-items: center;
 }
 
-/* ── HEADER ── */
-.header {
-  width: 100%;
-  max-width: 480px;
-  padding: 32px 0 28px;
-  position: relative;
-}
+.header { width: 100%; max-width: 480px; padding: 32px 0 28px; }
+.eyebrow { font-family: var(–mono); font-size: 10px; letter-spacing: 0.25em; color: var(–ink2); text-transform: uppercase; margin-bottom: 10px; }
+h1 { font-size: clamp(26px,7vw,36px); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
+h1 span { color: var(–accent); }
+.tagline { font-family: var(–mono); font-size: 11px; color: var(–ink2); margin-top: 10px; line-height: 1.5; }
 
-.header::before {
-  content: '';
-  position: absolute;
-  top: 48px; left: -16px; right: -16px;
-  height: 1px;
-  background: var(--border);
-}
+.card { background: var(–surface); border: 1px solid var(–border); border-radius: 16px; padding: 20px; width: 100%; max-width: 480px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.card-label { font-family: var(–mono); font-size: 9px; letter-spacing: 0.2em; color: var(–ink2); text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.card-label::after { content:’’; flex:1; height:1px; background:var(–border); }
 
-.eyebrow {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  color: var(--ink2);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
+.nome-input { width: 100%; background: var(–bg); border: 2px solid var(–border); border-radius: 10px; padding: 14px 16px; font-family: var(–mono); font-size: 18px; font-weight: 500; color: var(–ink); text-transform: uppercase; letter-spacing: 0.1em; outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
+.nome-input:focus { border-color: var(–accent); }
 
-h1 {
-  font-size: clamp(26px, 7vw, 36px);
-  font-weight: 900;
-  line-height: 1.05;
-  color: var(--ink);
-  letter-spacing: -0.03em;
-}
-
-h1 span {
-  color: var(--accent);
-}
-
-.tagline {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink2);
-  margin-top: 10px;
-  line-height: 1.5;
-}
-
-/* ── CARDS ── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px;
-  width: 100%;
-  max-width: 480px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-
-.card-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  color: var(--ink2);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.card-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-/* ── INPUT NOME ── */
-.nome-input {
-  width: 100%;
-  background: var(--bg);
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-family: var(--mono);
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--ink);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  outline: none;
-  transition: border-color 0.15s;
-  -webkit-appearance: none;
-}
-
-.nome-input:focus { border-color: var(--accent); }
-
-/* ── DROP ZONE ── */
-.dropzone {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 32px 16px;
-  text-align: center;
-  cursor: pointer;
-  position: relative;
-  background: var(--bg);
-  transition: all 0.2s;
-  -webkit-appearance: none;
-}
-
-.dropzone.active {
-  border-color: var(--accent);
-  background: #fef3ef;
-}
-
-.dropzone input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  font-size: 16px; /* prevent iOS zoom */
-}
-
+.dropzone { border: 2px dashed var(–border); border-radius: 12px; padding: 32px 16px; text-align: center; cursor: pointer; position: relative; background: var(–bg); transition: all 0.2s; }
+.dropzone.active { border-color: var(–accent); background: #fef3ef; }
+.dropzone input[type=“file”] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; font-size: 16px; }
 .drop-icon { font-size: 36px; display: block; margin-bottom: 10px; }
+.drop-title { font-size: 14px; font-weight: 700; color: var(–ink); margin-bottom: 4px; }
+.drop-sub { font-family: var(–mono); font-size: 11px; color: var(–ink2); }
 
-.drop-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 4px;
-}
+.loader { display: none; align-items: center; gap: 8px; font-family: var(–mono); font-size: 12px; color: var(–ink2); padding: 12px 0; }
+.loader.visible { display: flex; }
+.spinner { width: 16px; height: 16px; border: 2px solid var(–border); border-top-color: var(–accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.drop-sub {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink2);
-}
-
-/* ── STATUS ── */
-.status {
-  width: 100%;
-  max-width: 480px;
-  font-family: var(--mono);
-  font-size: 12px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  display: none;
-  line-height: 1.5;
-}
-
+.status { width: 100%; max-width: 480px; font-family: var(–mono); font-size: 12px; padding: 12px 16px; border-radius: 10px; margin-bottom: 12px; display: none; line-height: 1.5; }
 .status.visible { display: block; }
-.status.info    { background: #f0f4ff; color: #3347aa; border-left: 3px solid #4f6ef7; }
-.status.ok      { background: var(--ok-bg); color: var(--ok); border-left: 3px solid var(--ok); }
-.status.err     { background: var(--err-bg); color: var(--err); border-left: 3px solid var(--err); }
+.status.info { background: #f0f4ff; color: #3347aa; border-left: 3px solid #4f6ef7; }
+.status.ok   { background: var(–ok-bg); color: var(–ok); border-left: 3px solid var(–ok); }
+.status.err  { background: var(–err-bg); color: var(–err); border-left: 3px solid var(–err); }
 
-/* ── RISULTATI ── */
 .risultati { display: none; }
 .risultati.visible { display: block; }
 
-.week-range {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--accent);
-  margin-bottom: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.shift-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 20px;
-}
-
-.shift-row {
-  display: grid;
-  grid-template-columns: 36px 44px 1fr auto;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
-  background: var(--bg);
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
+.week-range { font-family: var(–mono); font-size: 11px; color: var(–accent); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+.shift-grid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.shift-row { display: grid; grid-template-columns: 36px 44px 1fr auto; align-items: center; gap: 10px; padding: 11px 14px; background: var(–bg); border-radius: 10px; border: 1px solid var(–border); }
 .shift-row.unknown { opacity: 0.6; }
+.s-day  { font-family: var(–mono); font-size: 10px; font-weight: 500; color: var(–ink2); text-transform: uppercase; }
+.s-code { font-family: var(–mono); font-size: 11px; font-weight: 500; background: #fff0eb; color: var(–accent); padding: 3px 7px; border-radius: 5px; text-align: center; border: 1px solid #f5cbb8; }
+.s-time { font-family: var(–mono); font-size: 13px; font-weight: 500; color: var(–ink); }
+.s-date { font-family: var(–mono); font-size: 10px; color: var(–ink2); }
+.no-shifts { text-align: center; color: var(–ink2); padding: 20px; font-family: var(–mono); font-size: 13px; }
 
-.s-day {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--ink2);
-  text-transform: uppercase;
-}
-
-.s-code {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  background: #fff0eb;
-  color: var(--accent);
-  padding: 3px 7px;
-  border-radius: 5px;
-  text-align: center;
-  border: 1px solid #f5cbb8;
-}
-
-.s-time {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.s-date {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink2);
-}
-
-.no-shifts {
-  text-align: center;
-  color: var(--ink2);
-  padding: 20px;
-  font-family: var(--mono);
-  font-size: 13px;
-}
-
-/* ── BOTTONI ── */
-.btn-cal {
-  display: block;
-  width: 100%;
-  padding: 16px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-family: var(--display);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  transition: background 0.15s, transform 0.1s;
-  -webkit-appearance: none;
-  margin-bottom: 10px;
-}
-
+.btn-cal { display: block; width: 100%; padding: 16px; background: var(–accent); color: white; border: none; border-radius: 12px; font-family: var(–display); font-size: 15px; font-weight: 700; letter-spacing: -0.01em; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.15s, transform 0.1s; -webkit-appearance: none; margin-bottom: 10px; }
 .btn-cal:active { background: #a8320f; transform: scale(0.98); }
+.btn-cal.disabled { opacity: 0.4; pointer-events: none; }
 
-.btn-ics {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  background: transparent;
-  color: var(--ink2);
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  font-family: var(--mono);
-  font-size: 12px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  transition: all 0.15s;
-  -webkit-appearance: none;
-}
+.btn-sec { display: block; width: 100%; padding: 14px; background: transparent; color: var(–ink2); border: 1.5px solid var(–border); border-radius: 12px; font-family: var(–mono); font-size: 12px; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.15s; -webkit-appearance: none; }
 
-.btn-ics:active { background: var(--bg); }
-
-/* ── LEGENDA ── */
-.legenda-toggle {
-  background: none;
-  border: none;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink2);
-  cursor: pointer;
-  padding: 0;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  display: block;
-  margin-bottom: 10px;
-}
-
-.legenda-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-}
-
-.leg-item {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.leg-code {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--accent);
-  min-width: 34px;
-}
-
-.leg-time {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink2);
-}
-
+.legenda-toggle { background: none; border: none; font-family: var(–mono); font-size: 11px; color: var(–ink2); cursor: pointer; padding: 0; text-decoration: underline; text-decoration-style: dotted; display: block; margin-bottom: 10px; }
+.legenda-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 5px; }
+.leg-item { display: flex; gap: 8px; align-items: center; }
+.leg-code { font-family: var(–mono); font-size: 11px; font-weight: 500; color: var(–accent); min-width: 34px; }
+.leg-time { font-family: var(–mono); font-size: 11px; color: var(–ink2); }
 .hidden { display: none; }
 
-/* ── ISTRUZIONI GITHUB ── */
-.github-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px;
-  width: 100%;
-  max-width: 480px;
-  margin-bottom: 12px;
-}
-
-.github-box h3 {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 12px;
-  letter-spacing: -0.02em;
-}
-
-.step-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.step-list li {
-  display: flex;
-  gap: 10px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink2);
-  line-height: 1.5;
-}
-
-.step-num {
-  background: var(--accent);
-  color: white;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-/* ── FOOTER ── */
-footer {
-  width: 100%;
-  max-width: 480px;
-  text-align: center;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink2);
-  padding: 24px 0 8px;
-  border-top: 1px solid var(--border);
-  margin-top: 8px;
-}
-
-/* ── LOADER ── */
-.loader {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--ink2);
-  padding: 8px 0;
-}
-
-.loader.visible { display: flex; }
-
-.spinner {
-  width: 16px; height: 16px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
+footer { width: 100%; max-width: 480px; text-align: center; font-family: var(–mono); font-size: 10px; color: var(–ink2); padding: 24px 0 8px; border-top: 1px solid var(–border); margin-top: 8px; }
 </style>
 
 </head>
 <body>
-
-<!-- HEADER -->
 
 <div class="header">
   <div class="eyebrow">RAI · Redazione Palermo</div>
@@ -462,591 +106,272 @@ footer {
   <p class="tagline">Carica il PDF settimanale →<br>importa in iCal con un tap</p>
 </div>
 
-<!-- STEP 1: COGNOME -->
-
 <div class="card">
   <div class="card-label">① cognome</div>
-  <input
-    type="text"
-    id="cognome"
-    class="nome-input"
-    value="MARINO"
-    placeholder="IL TUO COGNOME"
-    autocomplete="off"
-    autocorrect="off"
-    autocapitalize="characters"
-    spellcheck="false"
-  />
+  <input type="text" id="cognome" class="nome-input" value="MARINO"
+    autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"/>
 </div>
-
-<!-- STEP 2: PDF -->
 
 <div class="card">
   <div class="card-label">② orario settimanale (PDF)</div>
   <div class="dropzone" id="dropzone">
-    <input type="file" id="pdfFile" accept=".pdf,application/pdf" />
+    <input type="file" id="pdfFile" accept=".pdf,application/pdf"/>
     <span class="drop-icon">📋</span>
     <div class="drop-title">Tocca per scegliere il PDF</div>
     <div class="drop-sub">dalla Mail · dai File · da iCloud</div>
   </div>
-  <div class="loader" id="loader">
-    <div class="spinner"></div>
-    Lettura PDF in corso…
-  </div>
+  <div class="loader" id="loader"><div class="spinner"></div>Lettura PDF in corso…</div>
 </div>
 
-<!-- LEGENDA -->
-
 <div class="card">
-  <button class="legenda-toggle" onclick="toggleLegenda()">
-    📋 Mostra / nascondi legenda turni
-  </button>
+  <button class="legenda-toggle" onclick="toggleLegenda()">📋 Mostra / nascondi legenda turni</button>
   <div id="legenda" class="hidden">
     <div class="legenda-grid" id="legendaGrid"></div>
   </div>
 </div>
 
-<!-- STATUS -->
-
 <div id="status" class="status"></div>
-
-<!-- RISULTATI -->
 
 <div class="card risultati" id="risultati">
   <div class="card-label">③ turni trovati</div>
   <div class="week-range" id="weekRange"></div>
   <div class="shift-grid" id="shiftGrid"></div>
-
-  <!--
-    STRATEGIA iOS per aprire .ics:
-    1. Primo tentativo: link href="webcal://" — iOS apre direttamente Calendario
-    2. Fallback: link href="data:text/calendar" — Safari scarica/apre il file
-    Entrambi i link vengono generati dinamicamente al click.
-  -->
-
-  <a id="btnWebcal" class="btn-cal" href="#" onclick="apriCalendario(event)">
-    📅 Aggiungi a Calendario
-  </a>
-  <a id="btnIcs" class="btn-ics" href="#" onclick="scaricaICS(event)">
-    ↓ Scarica file .ics (alternativa)
-  </a>
-</div>
-
-<!-- ISTRUZIONI GITHUB PAGES -->
-
-<div class="github-box" id="githubBox">
-  <h3>⚠️ Per funzionare al 100% su iPad</h3>
-  <p style="font-family: var(--mono); font-size: 11px; color: var(--ink2); margin-bottom: 12px; line-height: 1.6;">
-    Questa app deve essere su GitHub Pages (gratis) per importare correttamente in Calendario iOS. Dal tuo iPad:
-  </p>
-  <ul class="step-list">
-    <li><span class="step-num">1</span>Vai su <strong>github.com</strong> con Safari → crea account gratuito</li>
-    <li><span class="step-num">2</span>Crea nuovo repository → chiamalo <strong>turni-rai</strong></li>
-    <li><span class="step-num">3</span>Add file → Create new file → chiamalo <strong>index.html</strong></li>
-    <li><span class="step-num">4</span>Incolla tutto il codice di questa pagina → Commit</li>
-    <li><span class="step-num">5</span>Settings → Pages → Branch: main → Save</li>
-    <li><span class="step-num">6</span>Dopo 1 min: <strong>tuonome.github.io/turni-rai</strong></li>
-    <li><span class="step-num">7</span>Apri quell'URL in Safari → Condividi → <strong>Aggiungi alla schermata Home</strong> ✅</li>
-  </ul>
+  <a id="btnCal" class="btn-cal disabled" href="#">📅 Aggiungi a Calendario</a>
+  <a id="btnIcs" class="btn-sec" href="#" onclick="return scaricaICS(event)">↓ Scarica file .ics (alternativa)</a>
 </div>
 
 <footer>
-  RAI Palermo · Turni settimanali → iCal<br>
+  RAI Palermo · Turni → iCal<br>
   Avvisi: sera prima (21:00) · 1 ora prima del turno
 </footer>
 
 <script>
-// ─────────────────────────────────────────
-// DATI TURNI (da legenda PDF)
-// ─────────────────────────────────────────
 const TURNI = {
-  'G8':  { inizio: '05:15', fine: '12:30', desc: 'Mattina presto' },
-  '3B':  { inizio: '05:45', fine: '13:35', desc: 'Alba' },
-  'G3':  { inizio: '08:00', fine: '15:50', desc: 'Mattina' },
-  'GF':  { inizio: '08:30', fine: '16:20', desc: 'Mattina' },
-  'GG':  { inizio: '09:30', fine: '17:20', desc: 'Mattina tardi' },
-  'GB':  { inizio: '11:00', fine: '18:50', desc: 'Spezzato' },
-  'GA':  { inizio: '12:00', fine: '19:50', desc: 'Pomeriggio' },
-  'BW':  { inizio: '12:15', fine: '20:05', desc: 'Pomeriggio' },
-  'B-':  { inizio: '15:00', fine: '22:50', desc: 'Sera' },
-  'G2':  { inizio: '16:00', fine: '23:50', desc: 'Sera tardi' },
-  'BGR': { inizio: '07:30', fine: '15:20', desc: 'Segreteria' },
-  'GRR': { inizio: '07:18', fine: '15:08', desc: 'TGR' },
-  'BH':  { inizio: '10:00', fine: '17:50', desc: '' },
+  'G8' : {i:'05:15',f:'12:30',d:'Mattina presto'},
+  '3B' : {i:'05:45',f:'13:35',d:'Alba'},
+  'G3' : {i:'08:00',f:'15:50',d:'Mattina'},
+  'GF' : {i:'08:30',f:'16:20',d:'Mattina'},
+  'GG' : {i:'09:30',f:'17:20',d:'Mattina tardi'},
+  'GB' : {i:'11:00',f:'18:50',d:'Spezzato'},
+  'GA' : {i:'12:00',f:'19:50',d:'Pomeriggio'},
+  'BW' : {i:'12:15',f:'20:05',d:'Pomeriggio'},
+  'B-' : {i:'15:00',f:'22:50',d:'Sera'},
+  'G2' : {i:'16:00',f:'23:50',d:'Sera tardi'},
+  'BGR': {i:'07:30',f:'15:20',d:'Segreteria'},
+  'GRR': {i:'07:18',f:'15:08',d:'TGR'},
+  'BH' : {i:'10:00',f:'17:50',d:''},
 };
-
 const GIORNI = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
-const MESI = {'gen':0,'feb':1,'mar':2,'apr':3,'mag':4,'giu':5,'lug':6,'ago':7,'set':8,'ott':9,'nov':10,'dic':11};
+const MESI   = {gen:0,feb:1,mar:2,apr:3,mag:4,giu:5,lug:6,ago:7,set:8,ott:9,nov:10,dic:11};
+let turniTrovati=[], dataInizio=null, icsContent='';
 
-let turniTrovati = [];
-let dataInizioSettimana = null;
-let icsContent = '';
-
-// ─────────────────────────────────────────
-// LEGENDA
-// ─────────────────────────────────────────
-const legendaGrid = document.getElementById('legendaGrid');
-Object.entries(TURNI).forEach(([code, t]) => {
-  legendaGrid.innerHTML += `
-    <div class="leg-item">
-      <span class="leg-code">${code}</span>
-      <span class="leg-time">${t.inizio}–${t.fine}</span>
-    </div>`;
+const lg = document.getElementById('legendaGrid');
+Object.entries(TURNI).forEach(([c,t]) => {
+  lg.innerHTML += `<div class="leg-item"><span class="leg-code">${c}</span><span class="leg-time">${t.i}–${t.f}</span></div>`;
 });
+function toggleLegenda() { document.getElementById('legenda').classList.toggle('hidden'); }
 
-function toggleLegenda() {
-  document.getElementById('legenda').classList.toggle('hidden');
+function st(msg,tipo='info') {
+  const el=document.getElementById('status');
+  el.textContent=msg; el.className=`status visible ${tipo}`;
 }
 
-// ─────────────────────────────────────────
-// STATUS
-// ─────────────────────────────────────────
-function mostraStatus(msg, tipo = 'info') {
-  const el = document.getElementById('status');
-  el.textContent = msg;
-  el.className = `status visible ${tipo}`;
-}
-
-function nascondiStatus() {
-  document.getElementById('status').className = 'status';
-}
-
-// ─────────────────────────────────────────
-// PDF.JS — WORKER
-// ─────────────────────────────────────────
-// Usiamo workerSrc con CDN. Su GitHub Pages funziona senza problemi.
-// Su iframe sandboxed (CodePen) i Worker sono bloccati — per questo
-// CodePen non è adatto.
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// ─────────────────────────────────────────
-// GESTIONE FILE
-// ─────────────────────────────────────────
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('pdfFile');
-
-fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) elaboraPDF(file);
+const dz=document.getElementById('dropzone');
+document.getElementById('pdfFile').addEventListener('change', e => {
+  if (e.target.files[0]) elabora(e.target.files[0]);
+});
+dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('active'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('active'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('active');
+  if (e.dataTransfer.files[0]) elabora(e.dataTransfer.files[0]);
 });
 
-// Drag & drop (iPad non lo supporta bene, ma lo teniamo per Mac)
-dropzone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropzone.classList.add('active');
-});
-dropzone.addEventListener('dragleave', () => dropzone.classList.remove('active'));
-dropzone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropzone.classList.remove('active');
-  const file = e.dataTransfer.files[0];
-  if (file && (file.type === 'application/pdf' || file.name.endsWith('.pdf'))) {
-    elaboraPDF(file);
-  }
-});
-
-// ─────────────────────────────────────────
-// ELABORAZIONE PDF
-// ─────────────────────────────────────────
-async function elaboraPDF(file) {
+async function elabora(file) {
   const cognome = document.getElementById('cognome').value.trim().toUpperCase();
-  if (!cognome) {
-    mostraStatus('⚠️ Inserisci prima il tuo cognome', 'err');
-    return;
-  }
+  if (!cognome) { st('Inserisci prima il tuo cognome','err'); return; }
 
-  // UI loading
   document.getElementById('loader').classList.add('visible');
   document.getElementById('risultati').classList.remove('visible');
-  nascondiStatus();
-  dropzone.querySelector('.drop-title').textContent = file.name;
+  const btn = document.getElementById('btnCal');
+  btn.classList.add('disabled'); btn.href='#';
+  dz.querySelector('.drop-title').textContent = file.name;
 
   try {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-
-    let testoCompleto = '';
-    let tuttiItems = [];
-
-    for (let p = 1; p <= pdf.numPages; p++) {
-      const pagina = await pdf.getPage(p);
-      const contenuto = await pagina.getTextContent();
-      tuttiItems = tuttiItems.concat(contenuto.items);
-      testoCompleto += contenuto.items.map(i => i.str).join(' ') + '\n';
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+    let testo='', items=[];
+    for (let p=1; p<=pdf.numPages; p++) {
+      const pg  = await pdf.getPage(p);
+      const cnt = await pg.getTextContent();
+      items = items.concat(cnt.items);
+      testo += cnt.items.map(i=>i.str).join(' ') + '\n';
     }
 
-    const shifts = estraiTurni(testoCompleto, tuttiItems, cognome);
-
-    if (shifts.length === 0) {
-      mostraStatus(`Nessun turno trovato per "${cognome}". Verifica che il cognome sia scritto esattamente come nel PDF.`, 'err');
-    } else {
-      turniTrovati = shifts;
-      icsContent = costruisciICS(shifts, cognome);
-      mostraRisultati(shifts);
-      mostraStatus(`✅ Trovati ${shifts.length} turno/i per ${cognome}`, 'ok');
+    const turni = estraiTurni(testo, items, cognome);
+    if (!turni.length) {
+      st(`Nessun turno trovato per "${cognome}". Verifica il cognome.`, 'err');
+      return;
     }
 
-  } catch (err) {
-    mostraStatus('Errore nella lettura del PDF: ' + err.message, 'err');
+    turniTrovati = turni;
+    icsContent   = costruisciICS(turni, cognome);
+    mostraRisultati(turni);
+
+    // ── CHIAVE PER iOS ─────────────────────────────────────────────
+    // L'href del pulsante viene impostato QUI, PRIMA del click dell'utente.
+    // Safari iOS blocca i download generati dentro un onclick handler,
+    // ma accetta liberamente il click su un <a> con href già presente nel DOM.
+    // Impostiamo anche l'attributo download così iOS lo riconosce come file.
+    const encoded = encodeURIComponent(icsContent);
+    btn.href = 'data:text/calendar;charset=utf-8,' + encoded;
+    btn.setAttribute('download', 'turni-' + icsData(dataInizio) + '.ics');
+    btn.classList.remove('disabled');
+    // ───────────────────────────────────────────────────────────────
+
+    st(`✅ Trovati ${turni.length} turno/i — tocca il pulsante rosso per importare`, 'ok');
+
+  } catch(err) {
+    st('Errore lettura PDF: ' + err.message, 'err');
     console.error(err);
   } finally {
     document.getElementById('loader').classList.remove('visible');
   }
 }
 
-// ─────────────────────────────────────────
-// ESTRAZIONE TURNI DAL PDF
-// ─────────────────────────────────────────
 function estraiTurni(testo, items, cognome) {
-  // 1. Trova data inizio settimana
-  const matchData = testo.match(/DAL\s+(\d{1,2})\s+(\w{3})\s+(\d{2,4})/i);
-  let weekStart;
-
-  if (matchData) {
-    const giorno = parseInt(matchData[1]);
-    const mese = MESI[matchData[2].toLowerCase()] ?? new Date().getMonth();
-    let anno = parseInt(matchData[3]);
-    if (anno < 100) anno += 2000;
-    weekStart = new Date(anno, mese, giorno);
+  const m = testo.match(/DAL\s+(\d{1,2})\s+(\w{3})\s+(\d{2,4})/i);
+  let ws;
+  if (m) {
+    let a=parseInt(m[3]); if(a<100) a+=2000;
+    ws = new Date(a, MESI[m[2].toLowerCase()]??0, parseInt(m[1]));
   } else {
-    // Fallback: domenica di questa settimana
-    weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+    ws=new Date(); ws.setDate(ws.getDate()-ws.getDay());
   }
-  weekStart.setHours(0, 0, 0, 0);
-  dataInizioSettimana = weekStart;
+  ws.setHours(0,0,0,0);
+  dataInizio=ws;
 
-  // 2. Individua le colonne dei giorni usando le coordinate X dei testi
-  //    Il PDF RAI ha "Domenica N", "Lunedi N+1" etc. nell'intestazione
-  const mapGiorni = {
-    'domenica':0,'lunedi':1,'lunedì':1,
-    'martedi':2,'martedì':2,
-    'mercoledi':3,'mercoledì':3,
-    'giovedi':4,'giovedì':4,
-    'venerdi':5,'venerdì':5,
-    'sabato':6
-  };
-
-  const colonneGiorni = {}; // giorno (0-6) → coordinata X centro colonna
-  items.forEach(item => {
-    const s = item.str.trim().toLowerCase();
-    if (mapGiorni[s] !== undefined) {
-      colonneGiorni[mapGiorni[s]] = item.transform[4];
-    }
+  const mapG={domenica:0,lunedi:1,'lunedì':1,martedi:2,'martedì':2,mercoledi:3,'mercoledì':3,giovedi:4,'giovedì':4,venerdi:5,'venerdì':5,sabato:6};
+  const colG={};
+  items.forEach(it => {
+    const s=it.str.trim().toLowerCase();
+    if (mapG[s]!==undefined) colG[mapG[s]]=it.transform[4];
   });
 
-  const shifts = [];
+  const shifts=[];
 
-  // 3. Metodo primario: usa coordinate X/Y
-  if (Object.keys(colonneGiorni).length >= 4) {
-    const itemsCognome = items.filter(item =>
-      item.str.trim().toUpperCase().includes(cognome)
-    );
-
-    itemsCognome.forEach(cogItem => {
-      const cogX = cogItem.transform[4];
-      const cogY = cogItem.transform[5];
-
-      // Trova giorno più vicino per X
-      let giornoVicino = null;
-      let distMin = Infinity;
-      Object.entries(colonneGiorni).forEach(([g, x]) => {
-        const dist = Math.abs(cogX - x);
-        if (dist < distMin && dist < 70) {
-          distMin = dist;
-          giornoVicino = parseInt(g);
-        }
+  if (Object.keys(colG).length>=4) {
+    items.filter(it=>it.str.trim().toUpperCase().includes(cognome)).forEach(cog=>{
+      const cx=cog.transform[4], cy=cog.transform[5];
+      let giorno=null, dmin=Infinity;
+      Object.entries(colG).forEach(([g,x])=>{
+        const d=Math.abs(cx-x);
+        if(d<dmin&&d<80){dmin=d;giorno=parseInt(g);}
       });
-
-      if (giornoVicino === null) return;
-
-      // Cerca codice turno: prima nell'item stesso, poi negli item vicini
-      let codiceTurno = trovaCodiceTurno(cogItem.str, items, cogX, cogY);
-
-      const data = new Date(weekStart);
-      data.setDate(weekStart.getDate() + giornoVicino);
-
-      // Evita duplicati
-      const esisteGia = shifts.some(s =>
-        s.giorno === giornoVicino && s.turno === codiceTurno
-      );
-
-      if (!esisteGia) {
-        shifts.push({
-          giorno: giornoVicino,
-          data: new Date(data),
-          turno: codiceTurno,
-        });
-      }
+      if(giorno===null) return;
+      const cod=trovaCodice(cog.str,items,cx,cy);
+      const data=new Date(ws); data.setDate(ws.getDate()+giorno);
+      if(!shifts.some(s=>s.giorno===giorno))
+        shifts.push({giorno,data:new Date(data),turno:cod});
     });
   }
 
-  // 4. Fallback testuale se coordinate non funzionano
-  if (shifts.length === 0) {
-    return estraiTurniTestuale(testo, cognome, weekStart);
-  }
-
-  return shifts.sort((a, b) => a.giorno - b.giorno);
+  if(!shifts.length) return fallback(testo,cognome,ws);
+  return shifts.sort((a,b)=>a.giorno-b.giorno);
 }
 
-function trovaCodiceTurno(testoItem, items, cogX, cogY) {
-  // Cerca nella stringa dell'item stesso
-  const parole = testoItem.trim().toUpperCase().split(/\s+/);
-  for (const p of parole) {
-    const c = p.replace(/[^A-Z0-9\-]/g, '');
-    if (TURNI[c]) return c;
+function trovaCodice(str,items,cx,cy) {
+  for (const p of str.trim().toUpperCase().split(/\s+/)) {
+    const c=p.replace(/[^A-Z0-9\-]/g,'');
+    if(TURNI[c]) return c;
   }
-
-  // Cerca negli item con Y simile (stessa riga) o X simile (stessa colonna)
-  const vicini = items.filter(i => {
-    if (i.str === testoItem) return false;
-    const dy = Math.abs(i.transform[5] - cogY);
-    const dx = Math.abs(i.transform[4] - cogX);
-    return (dy < 10 && dx < 100) || (dy < 60 && dx < 20);
-  });
-
-  for (const v of vicini) {
-    const c = v.str.trim().toUpperCase().replace(/[^A-Z0-9\-]/g, '');
-    if (TURNI[c]) return c;
+  for (const it of items) {
+    if(it.str===str) continue;
+    const dy=Math.abs(it.transform[5]-cy), dx=Math.abs(it.transform[4]-cx);
+    if((dy<10&&dx<120)||(dy<60&&dx<15)) {
+      const c=it.str.trim().toUpperCase().replace(/[^A-Z0-9\-]/g,'');
+      if(TURNI[c]) return c;
+    }
   }
-
   return null;
 }
 
-function estraiTurniTestuale(testo, cognome, weekStart) {
-  const shifts = [];
-  const righe = testo.split('\n');
-
-  righe.forEach(riga => {
-    if (!riga.toUpperCase().includes(cognome)) return;
-
-    // Dividi per spazi multipli (approssimano le colonne)
-    const colonne = riga.trim().split(/\s{2,}/);
-
-    colonne.forEach((col, idx) => {
-      if (!col.toUpperCase().includes(cognome)) return;
-
-      let codiceTurno = null;
-      col.trim().split(/\s+/).forEach(p => {
-        const c = p.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
-        if (TURNI[c]) codiceTurno = c;
-      });
-
-      // Cerca anche nella colonna precedente
-      if (!codiceTurno && idx > 0) {
-        const prev = colonne[idx-1].trim().toUpperCase().replace(/[^A-Z0-9\-]/g, '');
-        if (TURNI[prev]) codiceTurno = prev;
-      }
-
-      const giornoIdx = Math.min(idx, 6);
-      const data = new Date(weekStart);
-      data.setDate(weekStart.getDate() + giornoIdx);
-
-      if (!shifts.some(s => s.giorno === giornoIdx && s.turno === codiceTurno)) {
-        shifts.push({ giorno: giornoIdx, data: new Date(data), turno: codiceTurno });
-      }
+function fallback(testo,cognome,ws) {
+  const shifts=[];
+  testo.split('\n').forEach(riga=>{
+    if(!riga.toUpperCase().includes(cognome)) return;
+    riga.trim().split(/\s{2,}/).forEach((col,idx)=>{
+      if(!col.toUpperCase().includes(cognome)) return;
+      let cod=null;
+      col.split(/\s+/).forEach(p=>{const c=p.toUpperCase().replace(/[^A-Z0-9\-]/g,'');if(TURNI[c])cod=c;});
+      const gi=Math.min(idx,6);
+      const data=new Date(ws); data.setDate(ws.getDate()+gi);
+      if(!shifts.some(s=>s.giorno===gi)) shifts.push({giorno:gi,data:new Date(data),turno:cod});
     });
   });
-
-  return shifts.sort((a, b) => a.giorno - b.giorno);
+  return shifts.sort((a,b)=>a.giorno-b.giorno);
 }
 
-// ─────────────────────────────────────────
-// VISUALIZZAZIONE RISULTATI
-// ─────────────────────────────────────────
 function mostraRisultati(shifts) {
-  const fine = new Date(dataInizioSettimana);
-  fine.setDate(dataInizioSettimana.getDate() + 6);
-
-  document.getElementById('weekRange').textContent =
-    `${fmtData(dataInizioSettimana)} — ${fmtData(fine)}`;
-
-  const grid = document.getElementById('shiftGrid');
-  grid.innerHTML = '';
-
-  if (shifts.length === 0) {
-    grid.innerHTML = '<div class="no-shifts">Nessun turno trovato</div>';
-  } else {
-    shifts.forEach(s => {
-      const info = s.turno ? TURNI[s.turno] : null;
-      const orario = info ? `${info.inizio} → ${info.fine}` : '(orario da verificare)';
-      const cls = info ? '' : ' unknown';
-
-      grid.innerHTML += `
-        <div class="shift-row${cls}">
-          <span class="s-day">${GIORNI[s.giorno] || '?'}</span>
-          <span class="s-code">${s.turno || '?'}</span>
-          <span class="s-time">${orario}</span>
-          <span class="s-date">${fmtDataBreve(s.data)}</span>
-        </div>`;
-    });
-  }
-
+  const fine=new Date(dataInizio); fine.setDate(dataInizio.getDate()+6);
+  document.getElementById('weekRange').textContent=`${fmtData(dataInizio)} — ${fmtData(fine)}`;
+  const grid=document.getElementById('shiftGrid'); grid.innerHTML='';
+  shifts.forEach(s=>{
+    const t=s.turno?TURNI[s.turno]:null;
+    const orario=t?`${t.i} → ${t.f}`:'(verificare)';
+    grid.innerHTML+=`<div class="shift-row${t?'':' unknown'}"><span class="s-day">${GIORNI[s.giorno]||'?'}</span><span class="s-code">${s.turno||'?'}</span><span class="s-time">${orario}</span><span class="s-date">${fmtBreve(s.data)}</span></div>`;
+  });
   document.getElementById('risultati').classList.add('visible');
 }
 
-// ─────────────────────────────────────────
-// COSTRUZIONE FILE ICS
-// ─────────────────────────────────────────
-function costruisciICS(shifts, cognome) {
-  let ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Turni RAI Palermo//IT',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
-    `X-WR-CALNAME:Turni ${cognome}`,
-    'X-WR-TIMEZONE:Europe/Rome',
-    'X-WR-CALDESC:Turni settimanali RAI Palermo',
-  ].join('\r\n') + '\r\n';
-
-  shifts.forEach(s => {
-    const info = s.turno ? TURNI[s.turno] : null;
-    if (!info) return;
-
-    const dtStr = fmtICSData(s.data);
-    const dtStart = `${dtStr}T${info.inizio.replace(':', '')}00`;
-    const dtEnd   = `${dtStr}T${info.fine.replace(':', '')}00`;
-    const uid = `rai-palermo-${cognome.toLowerCase()}-${dtStr}-${s.turno}@turnirai`;
-    const allarme1 = fmtICSAlarmeSera(s.data);  // sera prima alle 21:00
-    const now = fmtICSNow();
-
-    ics += [
-      'BEGIN:VEVENT',
-      `UID:${uid}`,
-      `DTSTAMP:${now}`,
-      `DTSTART;TZID=Europe/Rome:${dtStart}`,
-      `DTEND;TZID=Europe/Rome:${dtEnd}`,
-      `SUMMARY:RAI – Turno ${s.turno}`,
-      `DESCRIPTION:${info.desc ? info.desc + '\\n' : ''}Orario: ${info.inizio}–${info.fine}\\nTurno: ${s.turno}`,
-      'CATEGORIES:Lavoro',
-      'STATUS:CONFIRMED',
-      // Allarme 1: sera del giorno prima alle 21:00
-      'BEGIN:VALARM',
-      'ACTION:DISPLAY',
-      `DESCRIPTION:⏰ Domani turno RAI ${s.turno} (${info.inizio})`,
-      `TRIGGER;VALUE=DATE-TIME:${allarme1}`,
-      'END:VALARM',
-      // Allarme 2: 1 ora prima del turno
-      'BEGIN:VALARM',
-      'ACTION:DISPLAY',
-      `DESCRIPTION:⏰ Turno RAI ${s.turno} tra 1 ora — ${info.inizio}`,
-      'TRIGGER:-PT60M',
-      'END:VALARM',
-      'END:VEVENT',
-    ].join('\r\n') + '\r\n';
+function costruisciICS(shifts,cognome) {
+  let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Turni RAI Palermo//IT\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Turni '+cognome+'\r\nX-WR-TIMEZONE:Europe/Rome\r\n';
+  shifts.forEach(s=>{
+    const t=s.turno?TURNI[s.turno]:null; if(!t) return;
+    const ds=icsData(s.data);
+    ics+='BEGIN:VEVENT\r\n'+
+      'UID:rai-'+cognome.toLowerCase()+'-'+ds+'-'+s.turno+'@palermo\r\n'+
+      'DTSTAMP:'+icsNow()+'\r\n'+
+      'DTSTART;TZID=Europe/Rome:'+ds+'T'+t.i.replace(':','')+'00\r\n'+
+      'DTEND;TZID=Europe/Rome:'+ds+'T'+t.f.replace(':','')+'00\r\n'+
+      'SUMMARY:RAI \u2013 Turno '+s.turno+'\r\n'+
+      'DESCRIPTION:'+(t.d?t.d+'\\n':'')+t.i+'\u2013'+t.f+'\r\n'+
+      'STATUS:CONFIRMED\r\n'+
+      'BEGIN:VALARM\r\nACTION:DISPLAY\r\n'+
+      'DESCRIPTION:\u23f0 Domani turno RAI '+s.turno+' ('+t.i+')\r\n'+
+      'TRIGGER;VALUE=DATE-TIME:'+icsSeraPrima(s.data)+'\r\n'+
+      'END:VALARM\r\n'+
+      'BEGIN:VALARM\r\nACTION:DISPLAY\r\n'+
+      'DESCRIPTION:\u23f0 Turno RAI '+s.turno+' tra 1 ora\r\n'+
+      'TRIGGER:-PT60M\r\n'+
+      'END:VALARM\r\n'+
+      'END:VEVENT\r\n';
   });
-
-  ics += 'END:VCALENDAR\r\n';
-  return ics;
-}
-
-// ─────────────────────────────────────────
-// APERTURA IN CALENDARIO iOS
-//
-// STRATEGIA (in ordine di affidabilità su iOS):
-//
-// 1. webcal:// — iOS intercetta questo schema e apre Calendario
-//    FUNZIONA solo se il file .ics è su un server HTTPS reale (GitHub Pages ✅)
-//    NON funziona da file locale o iframe
-//
-// 2. data:text/calendar — fallback, Safari può aprire il file inline
-//    Funziona su alcune versioni iOS, non su tutte
-//
-// ─────────────────────────────────────────
-
-function apriCalendario(e) {
-  e.preventDefault();
-  if (!icsContent || turniTrovati.length === 0) {
-    mostraStatus('Prima carica un PDF con i tuoi turni', 'err');
-    return;
-  }
-
-  // Verifica se siamo su GitHub Pages (server reale con HTTPS)
-  const isGitHubPages = window.location.hostname.includes('github.io');
-  const isLocalhost   = window.location.hostname === 'localhost' || window.location.hostname === '';
-  const isHTTPS       = window.location.protocol === 'https:';
-
-  if (isGitHubPages || (isHTTPS && !isLocalhost)) {
-    // Su server reale: usa webcal:// che iOS apre direttamente in Calendario
-    // Costruiamo un data URI e lo puntiamo via webcal
-    // Nota: webcal:// richiede un URL pubblico reale al file .ics
-    // Qui generiamo il file e usiamo il fallback data: che su HTTPS funziona meglio
-    const encoded = encodeURIComponent(icsContent);
-    const link = document.getElementById('btnWebcal');
-    link.href = 'data:text/calendar;charset=utf-8,' + encoded;
-
-    // Forza Safari a interpretarlo come file calendario
-    link.setAttribute('download', `turni-${fmtICSData(dataInizioSettimana)}.ics`);
-
-    // Trigger click nativo (non tramite JS per evitare il blocco popup di Safari)
-    link.removeAttribute('onclick');
-    link.click();
-    link.setAttribute('onclick', 'apriCalendario(event)');
-    link.removeAttribute('download');
-    link.href = '#';
-
-    mostraStatus('📅 Se Calendario non si apre automaticamente, usa il pulsante "Scarica .ics" qui sotto e aprilo dai File', 'ok');
-  } else {
-    // Non siamo su un server reale — mostra istruzione
-    mostraStatus('⚠️ Per importare in Calendario, questa app deve essere su GitHub Pages. Vedi le istruzioni in fondo alla pagina.', 'err');
-    document.getElementById('githubBox').scrollIntoView({ behavior: 'smooth' });
-  }
+  return ics+'END:VCALENDAR\r\n';
 }
 
 function scaricaICS(e) {
   e.preventDefault();
-  if (!icsContent || turniTrovati.length === 0) {
-    mostraStatus('Prima carica un PDF con i tuoi turni', 'err');
-    return;
-  }
-
-  // Metodo diretto: crea un elemento <a> e simula click
-  // Su iOS Safari questo funziona per scaricare il file nei Download
-  // L'utente può poi aprirlo dall'app File → Calendario lo importa
-  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `turni-${fmtICSData(dataInizioSettimana)}.ics`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-
-  mostraStatus('📥 File scaricato! Aprilo dall\'app File → Calendario lo importerà automaticamente', 'ok');
+  if(!icsContent){st('Prima carica un PDF','err');return false;}
+  const blob=new Blob([icsContent],{type:'text/calendar;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='turni-'+icsData(dataInizio)+'.ics';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  st('📥 File scaricato — aprilo dall\'app File per importare in Calendario','ok');
+  return false;
 }
 
-// ─────────────────────────────────────────
-// UTILITY DATE
-// ─────────────────────────────────────────
-function fmtData(d) {
-  return d.toLocaleDateString('it-IT', { day:'2-digit', month:'long', year:'numeric' });
-}
-
-function fmtDataBreve(d) {
-  return d.toLocaleDateString('it-IT', { day:'2-digit', month:'2-digit' });
-}
-
-function fmtICSData(d) {
-  return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
-}
-
-function fmtICSNow() {
-  const n = new Date();
-  return `${n.getUTCFullYear()}${pad(n.getUTCMonth()+1)}${pad(n.getUTCDate())}T${pad(n.getUTCHours())}${pad(n.getUTCMinutes())}${pad(n.getUTCSeconds())}Z`;
-}
-
-function fmtICSAlarmeSera(dataEvento) {
-  // Sera prima alle 21:00 ora italiana = 19:00 UTC (in estate 20:00 UTC)
-  // Per semplicità usiamo 19:00 UTC (funziona correttamente in inverno/CET)
-  const prev = new Date(dataEvento);
-  prev.setDate(prev.getDate() - 1);
-  return `${prev.getUTCFullYear()}${pad(prev.getUTCMonth()+1)}${pad(prev.getUTCDate())}T190000Z`;
-}
-
-function pad(n) { return String(n).padStart(2, '0'); }
+const pad=n=>String(n).padStart(2,'0');
+function fmtData(d){return d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});}
+function fmtBreve(d){return d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});}
+function icsData(d){return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;}
+function icsNow(){const n=new Date();return `${n.getUTCFullYear()}${pad(n.getUTCMonth()+1)}${pad(n.getUTCDate())}T${pad(n.getUTCHours())}${pad(n.getUTCMinutes())}${pad(n.getUTCSeconds())}Z`;}
+function icsSeraPrima(d){const p=new Date(d);p.setDate(p.getDate()-1);return `${p.getUTCFullYear()}${pad(p.getUTCMonth()+1)}${pad(p.getUTCDate())}T190000Z`;}
 </script>
 
 </body>
